@@ -1,0 +1,6 @@
+@QBOTECH.DELIVERY.API_HostAddress = http://localhost:5294
+
+GET {{QBOTECH.DELIVERY.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
