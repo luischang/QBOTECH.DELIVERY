@@ -87,6 +87,28 @@ namespace QBOTECH.DELIVERY.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting user");
             }
         }
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignIn([FromBody] UsersSignInDTO usersSignInDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                var user = await _userService.SignInAsync(usersSignInDTO.Email, usersSignInDTO.Password);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                //Handle exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error signing in");
+            }
+        }
 
     }
 }

@@ -54,6 +54,11 @@ namespace QBOTECH.DELIVERY.CORE.DTOs
 
     }
 
-
+    // UsersSignInDTO
+    public class UsersSignInDTO
+    {
+        public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
+    }
 
 }

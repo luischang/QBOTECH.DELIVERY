@@ -9,5 +9,6 @@ namespace QBOTECH.DELIVERY.CORE.Services
         Task<IEnumerable<UsersListDTO>> GetAllUsersAsync();
         Task<UsersListDTO> GetUserByIdAsync(int id);
         void UpdateUser(UsersUpdateDTO usersUpdateDTO);
+        Task<UsersListDTO> SignInAsync(string email, string password);
     }
 }

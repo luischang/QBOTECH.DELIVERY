@@ -7,9 +7,11 @@ namespace QBOTECH.DELIVERY.CORE.Services
     public class UsersService : IUsersService
     {
         private readonly IRepository<Users> _userRepository;
-        public UsersService(IRepository<Users> userRepository)
+        private readonly IUsersRepository _usersRepository;
+        public UsersService(IRepository<Users> userRepository, IUsersRepository usersRepository)
         {
             _userRepository = userRepository;
+            _usersRepository = usersRepository;
         }
         public async Task<IEnumerable<UsersListDTO>> GetAllUsersAsync()
         {
@@ -95,5 +97,23 @@ namespace QBOTECH.DELIVERY.CORE.Services
             _userRepository.Delete(user);
             _userRepository.SaveChanges();
         }
+
+        //SignIn with email and password
+        public async Task<UsersListDTO> SignInAsync(string email, string password)
+        {
+            var user = await _usersRepository.SignIn(email, password);
+
+            var userListDTO = user                               
+                                .Select(u => new UsersListDTO
+                                {
+                                    Id = u.Id,
+                                    FullName = u.FullName,
+                                    Email = u.Email,
+                                    CountryCode = u.CountryCode,
+                                    PhoneNumber = u.PhoneNumber
+                                }).FirstOrDefault();
+            return userListDTO;
+        }
+
     }
 }
