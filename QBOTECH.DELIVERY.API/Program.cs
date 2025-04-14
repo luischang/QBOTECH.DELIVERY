@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using QBOTECH.DELIVERY.CORE.Interfaces;
+using QBOTECH.DELIVERY.CORE.Services;
 using QBOTECH.DELIVERY.INFRASTRUCTURE.Data;
 using QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories;
 
@@ -13,6 +14,19 @@ builder.Services.AddDbContext<QbotechDeliveryContext>(options => options.UseMySq
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
+// Add UsersService
+builder.Services.AddScoped<IUsersService, UsersService>();
+//Add COARS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 
 
@@ -29,6 +43,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+app.UseCors("AllowAll");
 
 app.MapControllers();
 

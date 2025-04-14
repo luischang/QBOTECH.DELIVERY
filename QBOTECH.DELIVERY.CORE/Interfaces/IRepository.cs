@@ -10,9 +10,11 @@ namespace QBOTECH.DELIVERY.CORE.Interfaces
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetByIdAsync(int id);
+        T GetById(int id);
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
         Task SaveChangesAsync();
+        void SaveChanges();
     }
 }

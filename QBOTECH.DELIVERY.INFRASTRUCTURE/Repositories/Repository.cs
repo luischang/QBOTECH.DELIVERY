@@ -29,6 +29,10 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
         {
             return await _dbSet.FindAsync(id);
         }
+        public T GetById(int id)
+        {
+            return _dbSet.Find(id);
+        }
 
         public async Task AddAsync(T entity)
         {
@@ -48,6 +52,10 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
         }
     }
 }
