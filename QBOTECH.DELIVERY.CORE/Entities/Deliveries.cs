@@ -1,5 +1,7 @@
-﻿using System;
+﻿using QBOTECH.DELIVERY.CORE.Enums;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QBOTECH.DELIVERY.CORE.Entities;
 
@@ -26,4 +28,22 @@ public partial class Deliveries
     public decimal DestinationLng { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public string Status { get; set; }
+
+    [NotMapped]
+    public DeliveryStatus StatusEnum
+    {
+        get => Enum.Parse<DeliveryStatus>(Status);
+        set => Status = value.ToString();
+    }
+    public string TrackingNumber { get; set; } = null!;
+    public string OriginDescription { get; set; } = null!;
+    public string DestinationDescription { get; set; } = null!;
+    public DateOnly? EstimatedDeliveryDate { get; set; }
+    public TimeOnly? EstimatedDeliveryTime { get; set; }
+    public TimeOnly? EstimatedTimeFrom { get; set; }
+    public TimeOnly? EstimatedTimeTo { get; set; }
+
+
 }

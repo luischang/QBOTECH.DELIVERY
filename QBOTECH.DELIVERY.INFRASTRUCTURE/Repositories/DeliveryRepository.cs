@@ -17,5 +17,12 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
                 .Where(d => d.UserId == userId)
                 .ToListAsync();
         }
+
+        //Get delivery by tracking number
+        public async Task<Deliveries> GetDeliveryByTrackingNumberAsync(string trackingNumber)
+        {
+            return await _dbSet
+                .FirstOrDefaultAsync(d => d.TrackingNumber == trackingNumber);
+        }
     }
 }

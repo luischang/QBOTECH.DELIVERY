@@ -38,38 +38,78 @@ public partial class QbotechDeliveryContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
+
+            entity.Property(e => e.TrackingNumber)
+                .HasMaxLength(50)
+                .HasColumnName("tracking_number");
+
+            entity.Property(e => e.Status)
+                .HasMaxLength(1)
+                .HasColumnName("status")
+                .HasDefaultValue("P");
+
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("current_timestamp()")
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
+
             entity.Property(e => e.DestinationLat)
                 .HasPrecision(10, 6)
                 .HasColumnName("destination_lat");
+
             entity.Property(e => e.DestinationLng)
                 .HasPrecision(10, 6)
                 .HasColumnName("destination_lng");
+
             entity.Property(e => e.OriginLat)
                 .HasPrecision(10, 6)
                 .HasColumnName("origin_lat");
+
             entity.Property(e => e.OriginLng)
                 .HasPrecision(10, 6)
                 .HasColumnName("origin_lng");
+
             entity.Property(e => e.PackageDetails)
                 .HasColumnType("text")
                 .HasColumnName("package_details");
+
             entity.Property(e => e.RecipientEmail)
                 .HasMaxLength(100)
                 .HasColumnName("recipient_email");
+
             entity.Property(e => e.RecipientName)
                 .HasMaxLength(100)
                 .HasColumnName("recipient_name");
+
             entity.Property(e => e.RecipientPhone)
                 .HasMaxLength(20)
                 .HasColumnName("recipient_phone");
+
             entity.Property(e => e.UserId)
                 .HasColumnType("int(11)")
                 .HasColumnName("user_id");
+            entity.Property(e => e.OriginDescription)
+                .HasMaxLength(255)
+                .HasColumnName("origin_description");
+
+            entity.Property(e => e.DestinationDescription)
+                .HasMaxLength(255)
+                .HasColumnName("destination_description");
+
+            entity.Property(e => e.EstimatedDeliveryDate)
+                .HasColumnName("estimated_delivery_date");
+
+            entity.Property(e => e.EstimatedDeliveryTime)
+                .HasColumnName("estimated_delivery_time");
+
+            entity.Property(e => e.EstimatedTimeFrom)
+                .HasColumnName("estimated_time_from");
+
+            entity.Property(e => e.EstimatedTimeTo)
+                .HasColumnName("estimated_time_to");
+
         });
+
 
         modelBuilder.Entity<Users>(entity =>
         {

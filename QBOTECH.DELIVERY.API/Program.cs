@@ -17,6 +17,7 @@ builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
 // Add UsersService
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
 //Add COARS
 builder.Services.AddCors(options =>
 {
