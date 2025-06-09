@@ -23,6 +23,9 @@ builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
 builder.Services.AddScoped<IDeliveryLocationRepository, DeliveryLocationRepository>();
 builder.Services.AddScoped<QBOTECH.DELIVERY.CORE.Services.DeliveryLocationService>();
+builder.Services.AddScoped<IReportsService, ReportsService>();
+builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
+builder.Services.AddScoped<IReportsService, ReportsService>();
 
 //Add Swagger
 builder.Services.AddEndpointsApiExplorer();
