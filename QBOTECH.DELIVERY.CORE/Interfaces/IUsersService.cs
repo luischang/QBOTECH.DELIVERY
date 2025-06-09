@@ -1,6 +1,6 @@
 ﻿using QBOTECH.DELIVERY.CORE.DTOs;
 
-namespace QBOTECH.DELIVERY.CORE.Services
+namespace QBOTECH.DELIVERY.CORE.Interfaces
 {
     public interface IUsersService
     {
@@ -8,7 +8,7 @@ namespace QBOTECH.DELIVERY.CORE.Services
         void DeleteUser(int id);
         Task<IEnumerable<UsersListDTO>> GetAllUsersAsync();
         Task<UsersListDTO> GetUserByIdAsync(int id);
+        Task<UsersResponseDTO> SignInWithJwtAsync(string email, string password);
         void UpdateUser(UsersUpdateDTO usersUpdateDTO);
-        Task<UsersListDTO> SignInAsync(string email, string password);
     }
 }

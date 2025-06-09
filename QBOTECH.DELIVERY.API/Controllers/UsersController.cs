@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QBOTECH.DELIVERY.CORE.DTOs;
-using QBOTECH.DELIVERY.CORE.Entities;
 using QBOTECH.DELIVERY.CORE.Interfaces;
-using QBOTECH.DELIVERY.CORE.Services;
 
 namespace QBOTECH.DELIVERY.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _userService;
@@ -32,7 +31,8 @@ namespace QBOTECH.DELIVERY.API.Controllers
             }
             return Ok(user);
         }
-        [HttpPost]
+        [HttpPost("signup")]
+        [AllowAnonymous] // Allow anonymous access for sign-up
         public async Task<IActionResult> AddUser([FromBody] UsersCreateDTO usersCreateDTO)
         {
             if (!ModelState.IsValid)
@@ -52,6 +52,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
             }
         }
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateUser(int id, [FromBody] UsersUpdateDTO usersUpdateDTO)
         {
             if (id != usersUpdateDTO.Id)
@@ -72,22 +73,9 @@ namespace QBOTECH.DELIVERY.API.Controllers
                 //Handle exception
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error updating user");
             }
-        }
-        [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
-        {
-            try
-            {
-                _userService.DeleteUser(id);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                //Handle exception
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting user");
-            }
-        }
+        }      
         [HttpPost("signin")]
+        [AllowAnonymous] // Allow anonymous access for sign-in
         public async Task<IActionResult> SignIn([FromBody] UsersSignInDTO usersSignInDTO)
         {
             if (!ModelState.IsValid)
@@ -96,12 +84,12 @@ namespace QBOTECH.DELIVERY.API.Controllers
             }
             try
             {
-                var user = await _userService.SignInAsync(usersSignInDTO.Email, usersSignInDTO.Password);
-                if (user == null)
+                var response = await _userService.SignInWithJwtAsync(usersSignInDTO.Email, usersSignInDTO.Password);
+                if (response == null)
                 {
                     return Unauthorized();
                 }
-                return Ok(user);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -109,6 +97,5 @@ namespace QBOTECH.DELIVERY.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error signing in");
             }
         }
-
     }
 }

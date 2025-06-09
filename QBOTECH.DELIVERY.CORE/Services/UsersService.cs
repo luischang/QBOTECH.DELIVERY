@@ -1,4 +1,5 @@
-﻿using QBOTECH.DELIVERY.CORE.DTOs;
+﻿using Microsoft.Extensions.Configuration;
+using QBOTECH.DELIVERY.CORE.DTOs;
 using QBOTECH.DELIVERY.CORE.Entities;
 using QBOTECH.DELIVERY.CORE.Interfaces;
 
@@ -8,11 +9,17 @@ namespace QBOTECH.DELIVERY.CORE.Services
     {
         private readonly IRepository<Users> _userRepository;
         private readonly IUsersRepository _usersRepository;
-        public UsersService(IRepository<Users> userRepository, IUsersRepository usersRepository)
+        private readonly IConfiguration _configuration;
+        private readonly IJWTService _jwtService;
+
+        public UsersService(IRepository<Users> userRepository, IUsersRepository usersRepository, IConfiguration configuration, IJWTService jwtService)
         {
             _userRepository = userRepository;
             _usersRepository = usersRepository;
+            _configuration = configuration;
+            _jwtService = jwtService;
         }
+
         public async Task<IEnumerable<UsersListDTO>> GetAllUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -33,6 +40,7 @@ namespace QBOTECH.DELIVERY.CORE.Services
                                 }).ToList();
             return usersListDTO;
         }
+
         public async Task<UsersListDTO> GetUserByIdAsync(int id)
         {
             var user = await _userRepository.GetByIdAsync(id);
@@ -50,6 +58,7 @@ namespace QBOTECH.DELIVERY.CORE.Services
             };
             return userListDTO;
         }
+
         public async Task<UsersCreateResponseDTO> AddUserAsync(UsersCreateDTO usersCreateDTO)
         {
             //Convert to Users
@@ -76,6 +85,7 @@ namespace QBOTECH.DELIVERY.CORE.Services
             };
             return usersCreateResponseDTO;
         }
+
         public void UpdateUser(UsersUpdateDTO usersUpdateDTO)
         {
             //Convert to Users
@@ -91,6 +101,7 @@ namespace QBOTECH.DELIVERY.CORE.Services
             _userRepository.Update(user);
             _userRepository.SaveChanges();
         }
+
         public void DeleteUser(int id)
         {
             var user = _userRepository.GetById(id);
@@ -98,22 +109,23 @@ namespace QBOTECH.DELIVERY.CORE.Services
             _userRepository.SaveChanges();
         }
 
-        //SignIn with email and password
-        public async Task<UsersListDTO> SignInAsync(string email, string password)
+        //SignIn with email and password, returns user and JWT
+        public async Task<UsersResponseDTO> SignInWithJwtAsync(string email, string password)
         {
             var user = await _usersRepository.SignIn(email, password);
+            var usersResponseDTO = new UsersResponseDTO
+            {
+                Id =  user.Id,
+                FullName = user.FullName,
+                Email = user.Email,
+                CountryCode = user.CountryCode,
+                PhoneNumber = user.PhoneNumber,
+                Token = _jwtService.GenerateJWToken(user)
+            };
+            if (usersResponseDTO == null)
+                return null;
 
-            var userListDTO = user                               
-                                .Select(u => new UsersListDTO
-                                {
-                                    Id = u.Id,
-                                    FullName = u.FullName,
-                                    Email = u.Email,
-                                    CountryCode = u.CountryCode,
-                                    PhoneNumber = u.PhoneNumber
-                                }).FirstOrDefault();
-            return userListDTO;
+            return usersResponseDTO;
         }
-
     }
 }

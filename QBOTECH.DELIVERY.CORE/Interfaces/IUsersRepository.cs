@@ -4,6 +4,6 @@ namespace QBOTECH.DELIVERY.CORE.Interfaces
 {
     public interface IUsersRepository
     {
-        Task<IEnumerable<Users>> SignIn(string email, string password);
+        Task<Users> SignIn(string email, string password);
     }
 }

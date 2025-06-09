@@ -11,11 +11,11 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
         {
         }
 
-        public async Task<IEnumerable<Users>> SignIn(string email, string password)
+        public async Task<Users> SignIn(string email, string password)
         {
             return await _dbSet
                 .Where(d => d.Email == email && d.PasswordHash == password)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
         }
     }
 }

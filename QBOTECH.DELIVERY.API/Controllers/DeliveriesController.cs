@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QBOTECH.DELIVERY.CORE.DTOs;
-using QBOTECH.DELIVERY.CORE.Services;
+using QBOTECH.DELIVERY.CORE.Interfaces;
 
 namespace QBOTECH.DELIVERY.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
+    [Authorize]
     public class DeliveriesController : ControllerBase
     {
         private readonly IDeliveriesService _deliveriesService;

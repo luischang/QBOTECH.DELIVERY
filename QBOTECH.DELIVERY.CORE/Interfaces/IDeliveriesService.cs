@@ -1,6 +1,6 @@
 ﻿using QBOTECH.DELIVERY.CORE.DTOs;
 
-namespace QBOTECH.DELIVERY.CORE.Services
+namespace QBOTECH.DELIVERY.CORE.Interfaces
 {
     public interface IDeliveriesService
     {

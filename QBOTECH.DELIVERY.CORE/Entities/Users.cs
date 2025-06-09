@@ -18,4 +18,5 @@ public partial class Users
     public string PhoneNumber { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
+    public string Type { get; set; } = null!;
 }

@@ -9,12 +9,8 @@ namespace QBOTECH.DELIVERY.CORE.Enums
     public enum DeliveryStatus
     {
         P, // Pendiente
-        A, // Aceptado
-        E, // En camino
-        D, // Entregado
+        I, // Aceptado
+        F, // Finalizado
         C, // Cancelado
-        F, // Fallido
-        R, // Reprogramado
-        X  // Devuelto
     }
 }

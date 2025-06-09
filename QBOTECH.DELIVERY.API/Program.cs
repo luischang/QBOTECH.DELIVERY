@@ -3,6 +3,7 @@ using QBOTECH.DELIVERY.CORE.Interfaces;
 using QBOTECH.DELIVERY.CORE.Services;
 using QBOTECH.DELIVERY.INFRASTRUCTURE.Data;
 using QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories;
+using QBOTECH.DELIVERY.INFRASTRUCTURE.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,20 @@ builder.Services.AddDbContext<QbotechDeliveryContext>(options => options.UseMySq
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IDeliveryRepository, DeliveryRepository>();
-// Add UsersService
-builder.Services.AddScoped<IUsersService, UsersService>();
+// Add UsersService with IConfiguration
+builder.Services.AddSharedInfrastructure(_config);
+builder.Services.AddTransient<IUsersService, UsersService>();
+ 
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<IDeliveriesService, DeliveriesService>();
-//Add COARS
+
+
+
+//Add Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+//Add CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -42,6 +52,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseAuthorization();

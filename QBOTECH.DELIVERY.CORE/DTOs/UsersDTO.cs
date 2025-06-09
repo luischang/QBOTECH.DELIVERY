@@ -61,4 +61,15 @@ namespace QBOTECH.DELIVERY.CORE.DTOs
         public string Password { get; set; } = null!;
     }
 
+    public class UsersResponseDTO
+    {
+        public int Id { get; set; }
+        public string FullName { get; set; } = null!;
+        public string Email { get; set; } = null!;
+        public string CountryCode { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
+        public string Token { get; set; }
+
+    }
+
 }
