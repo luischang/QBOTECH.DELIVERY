@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QBOTECH.DELIVERY.CORE.DTOs;
 using QBOTECH.DELIVERY.CORE.Interfaces;
+using QBOTECH.DELIVERY.CORE.Services;
 
 namespace QBOTECH.DELIVERY.API.Controllers
 {
@@ -12,9 +13,11 @@ namespace QBOTECH.DELIVERY.API.Controllers
     public class DeliveriesController : ControllerBase
     {
         private readonly IDeliveriesService _deliveriesService;
-        public DeliveriesController(IDeliveriesService deliveriesService)
+        private readonly DeliveryLocationService _locationService;
+        public DeliveriesController(IDeliveriesService deliveriesService, DeliveryLocationService locationService)
         {
             _deliveriesService = deliveriesService;
+            _locationService = locationService;
         }
 
         // GET: api/v1/deliveries
@@ -122,6 +125,54 @@ namespace QBOTECH.DELIVERY.API.Controllers
         {
             var deliveries = await _deliveriesService.GetDeliveriesByUserIdAsync(userId);
             return Ok(deliveries);
+        }
+
+        [HttpPost("{id}/location")]
+        public async Task<IActionResult> PostLocation(int id, [FromBody] DeliveryLocationDTO dto)
+        {
+            if (id != dto.DeliveryId)
+                return BadRequest();
+            await _locationService.AddLocationAsync(dto);
+            return Ok();
+        }
+
+        [HttpGet("{id}/location")]
+        public async Task<IActionResult> GetLastLocation(int id)
+        {
+            var location = await _locationService.GetLastLocationAsync(id);
+            if (location == null) return NotFound();
+            return Ok(location);
+        }
+
+        [HttpGet("{id}/locations")]
+        public async Task<IActionResult> GetLocations(int id)
+        {
+            var locations = await _locationService.GetLocationsByDeliveryAsync(id);
+            return Ok(locations);
+        }
+
+        [HttpPost("tracking/{trackingNumber}/location")]
+        public async Task<IActionResult> PostLocationByTracking(string trackingNumber, [FromBody] DeliveryLocationByTrackingDTO dto)
+        {
+            if (!string.Equals(trackingNumber, dto.TrackingNumber, StringComparison.OrdinalIgnoreCase))
+                return BadRequest();
+            await _locationService.AddLocationByTrackingAsync(dto);
+            return Ok();
+        }
+
+        [HttpGet("tracking/{trackingNumber}/location")]
+        public async Task<IActionResult> GetLastLocationByTracking(string trackingNumber)
+        {
+            var location = await _locationService.GetLastLocationByTrackingAsync(trackingNumber);
+            if (location == null) return NotFound();
+            return Ok(location);
+        }
+
+        [HttpGet("tracking/{trackingNumber}/locations")]
+        public async Task<IActionResult> GetLocationsByTracking(string trackingNumber)
+        {
+            var locations = await _locationService.GetLocationsByTrackingAsync(trackingNumber);
+            return Ok(locations);
         }
     }
 }

@@ -45,5 +45,7 @@ public partial class Deliveries
     public TimeOnly? EstimatedTimeFrom { get; set; }
     public TimeOnly? EstimatedTimeTo { get; set; }
 
-
+    // Relaciones
+    public virtual Users User { get; set; } = null!;
+    public virtual ICollection<DeliveryLocation> DeliveryLocations { get; set; } = new List<DeliveryLocation>();
 }

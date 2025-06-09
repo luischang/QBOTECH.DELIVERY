@@ -19,4 +19,7 @@ public partial class Users
 
     public DateTime CreatedAt { get; set; }
     public string Type { get; set; } = null!;
+
+    // Relación uno a muchos con Deliveries
+    public virtual ICollection<Deliveries> Deliveries { get; set; } = new List<Deliveries>();
 }

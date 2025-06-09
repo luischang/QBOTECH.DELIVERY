@@ -21,6 +21,8 @@ public partial class QbotechDeliveryContext : DbContext
 
     public virtual DbSet<Users> Users { get; set; }
 
+    public virtual DbSet<DeliveryLocation> DeliveryLocations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -110,6 +112,22 @@ public partial class QbotechDeliveryContext : DbContext
 
         });
 
+        modelBuilder.Entity<DeliveryLocation>(entity =>
+        {
+            entity.ToTable("deliveryLocations");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DeliveryId).HasColumnName("delivery_id");
+            entity.Property(e => e.Latitude).HasColumnName("latitude").HasPrecision(10, 7);
+            entity.Property(e => e.Longitude).HasColumnName("longitude").HasPrecision(10, 7);
+            entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasDefaultValueSql("current_timestamp()");
+            entity.HasIndex(e => new { e.DeliveryId, e.CreatedAt }, "idx_deliveryid_createdat");
+            entity.HasOne(e => e.Delivery)
+                  .WithMany(d => d.DeliveryLocations)
+                  .HasForeignKey(e => e.DeliveryId)
+                  .HasConstraintName("FK_DeliveryLocation_Deliveries")
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
 
         modelBuilder.Entity<Users>(entity =>
         {
