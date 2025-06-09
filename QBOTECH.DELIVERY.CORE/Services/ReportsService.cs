@@ -22,5 +22,11 @@ namespace QBOTECH.DELIVERY.CORE.Services
 
         public Task<IEnumerable<DeliveriesByUserReportDTO>> GetDeliveriesByUserAsync()
             => _reportsRepository.GetDeliveriesByUserAsync();
+
+        public Task<IEnumerable<DeliveryStatusHistoryDTO>> GetDeliveryStatusHistoryAsync(int deliveryId)
+            => _reportsRepository.GetDeliveryStatusHistoryAsync(deliveryId);
+
+        public Task<DeliveriesOnTimeReportDTO> GetDeliveriesOnTimeReportAsync()
+            => _reportsRepository.GetDeliveriesOnTimeReportAsync();
     }
 }

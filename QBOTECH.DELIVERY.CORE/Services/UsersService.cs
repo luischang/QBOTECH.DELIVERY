@@ -113,6 +113,10 @@ namespace QBOTECH.DELIVERY.CORE.Services
         public async Task<UsersResponseDTO> SignInWithJwtAsync(string email, string password)
         {
             var user = await _usersRepository.SignIn(email, password);
+            //Validate if user is null
+            if (user == null)
+                return null;
+
             var usersResponseDTO = new UsersResponseDTO
             {
                 Id =  user.Id,

@@ -45,5 +45,19 @@ namespace QBOTECH.DELIVERY.API.Controllers
             foreach (var r in result) total += r.Count;
             return Ok(new { totalDeliveries = total, result });
         }
+
+        [HttpGet("delivery/{deliveryId}/history")]
+        public async Task<IActionResult> GetDeliveryStatusHistory(int deliveryId)
+        {
+            var result = await _reportsService.GetDeliveryStatusHistoryAsync(deliveryId);
+            return Ok(result);
+        }
+
+        [HttpGet("ontime")]
+        public async Task<IActionResult> GetDeliveriesOnTimeReport()
+        {
+            var result = await _reportsService.GetDeliveriesOnTimeReportAsync();
+            return Ok(result);
+        }
     }
 }

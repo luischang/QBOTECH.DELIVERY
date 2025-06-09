@@ -2,6 +2,7 @@ using QBOTECH.DELIVERY.CORE.DTOs;
 using QBOTECH.DELIVERY.CORE.Interfaces;
 using QBOTECH.DELIVERY.INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
 {
@@ -60,6 +61,45 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
                 })
                 .OrderByDescending(x => x.Count)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<DeliveryStatusHistoryDTO>> GetDeliveryStatusHistoryAsync(int deliveryId)
+        {
+            return await _context.DeliveryStatusHistories
+                .Where(h => h.DeliveryId == deliveryId)
+                .OrderBy(h => h.ChangedAt)
+                .Select(h => new DeliveryStatusHistoryDTO
+                {
+                    Id = h.Id,
+                    DeliveryId = h.DeliveryId,
+                    PreviousStatus = h.PreviousStatus,
+                    NewStatus = h.NewStatus,
+                    ChangedAt = h.ChangedAt,
+                    ChangedBy = h.ChangedBy,
+                    Comment = h.Comment
+                })
+                .ToListAsync();
+        }
+
+        public async Task<DeliveriesOnTimeReportDTO> GetDeliveriesOnTimeReportAsync()
+        {
+            var delivered = await _context.Deliveries
+                .Where(d => d.Status == "F" && d.EstimatedDeliveryDate != null && d.EstimatedDeliveryTime != null)
+                .ToListAsync();
+            int totalDelivered = delivered.Count;
+            int deliveredOnTime = delivered.Count(d =>
+                d.EstimatedDeliveryDate.HasValue &&
+                d.EstimatedDeliveryTime.HasValue &&
+                d.CreatedAt.Date <= d.EstimatedDeliveryDate.Value.ToDateTime(TimeOnly.MinValue).Date &&
+                d.CreatedAt.TimeOfDay <= d.EstimatedDeliveryTime.Value.ToTimeSpan()
+            );
+            double percentage = totalDelivered > 0 ? (double)deliveredOnTime / totalDelivered * 100 : 0;
+            return new DeliveriesOnTimeReportDTO
+            {
+                TotalDelivered = totalDelivered,
+                DeliveredOnTime = deliveredOnTime,
+                PercentageOnTime = percentage
+            };
         }
     }
 }

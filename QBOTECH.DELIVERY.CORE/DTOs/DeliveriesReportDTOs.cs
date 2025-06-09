@@ -31,4 +31,24 @@ namespace QBOTECH.DELIVERY.CORE.DTOs
         public string Location { get; set; } = null!;
         public int Count { get; set; }
     }
+
+    // Historia de estados de entrega
+    public class DeliveryStatusHistoryDTO
+    {
+        public int Id { get; set; }
+        public int DeliveryId { get; set; }
+        public string? PreviousStatus { get; set; }
+        public string NewStatus { get; set; } = null!;
+        public DateTime ChangedAt { get; set; }
+        public int? ChangedBy { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    // Reporte de entregas a tiempo
+    public class DeliveriesOnTimeReportDTO
+    {
+        public int TotalDelivered { get; set; }
+        public int DeliveredOnTime { get; set; }
+        public double PercentageOnTime { get; set; }
+    }
 }

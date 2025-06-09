@@ -23,6 +23,8 @@ public partial class QbotechDeliveryContext : DbContext
 
     public virtual DbSet<DeliveryLocation> DeliveryLocations { get; set; }
 
+    public virtual DbSet<DeliveryStatusHistory> DeliveryStatusHistories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -127,6 +129,19 @@ public partial class QbotechDeliveryContext : DbContext
                   .HasForeignKey(e => e.DeliveryId)
                   .HasConstraintName("FK_DeliveryLocation_Deliveries")
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<DeliveryStatusHistory>(entity =>
+        {
+            entity.ToTable("deliveryStatusHistory");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.DeliveryId).HasColumnName("delivery_id");
+            entity.Property(e => e.PreviousStatus).HasColumnName("previous_status").HasMaxLength(1);
+            entity.Property(e => e.NewStatus).HasColumnName("new_status").HasMaxLength(1).IsRequired();
+            entity.Property(e => e.ChangedAt).HasColumnName("changed_at");
+            entity.Property(e => e.ChangedBy).HasColumnName("changed_by");
+            entity.Property(e => e.Comment).HasColumnName("comment").HasMaxLength(255);
         });
 
         modelBuilder.Entity<Users>(entity =>
