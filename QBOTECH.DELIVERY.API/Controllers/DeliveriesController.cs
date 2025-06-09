@@ -100,5 +100,28 @@ namespace QBOTECH.DELIVERY.API.Controllers
             }
             return Ok(delivery);
         }
+
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> UpdateDeliveryStatus(int id, [FromBody] DeliveryStatusUpdateDTO statusUpdateDTO)
+        {
+            if (id != statusUpdateDTO.Id)
+                return BadRequest();
+            try
+            {
+                await _deliveriesService.UpdateDeliveryStatusAsync(statusUpdateDTO);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating delivery status");
+            }
+        }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetDeliveriesByUserId(int userId)
+        {
+            var deliveries = await _deliveriesService.GetDeliveriesByUserIdAsync(userId);
+            return Ok(deliveries);
+        }
     }
 }

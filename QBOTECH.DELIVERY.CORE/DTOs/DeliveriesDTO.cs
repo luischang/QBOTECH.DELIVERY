@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QBOTECH.DELIVERY.CORE.Enums;
 
 namespace QBOTECH.DELIVERY.CORE.DTOs
 {
@@ -88,6 +89,12 @@ namespace QBOTECH.DELIVERY.CORE.DTOs
         public decimal DestinationLng { get; set; }
     }
 
+    public class DeliveryStatusUpdateDTO
+    {
+        public int Id { get; set; }
+        public string Status { get; set; } = null!;
+    }
+
     public class DeliveriesListDTO
     {
         public int Id { get; set; }
@@ -101,6 +108,7 @@ namespace QBOTECH.DELIVERY.CORE.DTOs
         public decimal DestinationLat { get; set; }
         public decimal DestinationLng { get; set; }        
         public string Status { get; set; } = null!;
+        public DeliveryStatus StatusEnum => Enum.Parse<DeliveryStatus>(Status);
         public string TrackingNumber { get; set; } = null!;
         public string OriginDescription { get; set; } = null!;
         public string DestinationDescription { get; set; } = null!;

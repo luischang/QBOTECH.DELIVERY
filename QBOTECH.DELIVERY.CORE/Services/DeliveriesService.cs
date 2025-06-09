@@ -1,5 +1,6 @@
 ﻿using QBOTECH.DELIVERY.CORE.DTOs;
 using QBOTECH.DELIVERY.CORE.Entities;
+using QBOTECH.DELIVERY.CORE.Enums;
 using QBOTECH.DELIVERY.CORE.Interfaces;
 
 namespace QBOTECH.DELIVERY.CORE.Services
@@ -183,6 +184,46 @@ namespace QBOTECH.DELIVERY.CORE.Services
                 EstimatedTimeTo = delivery.EstimatedTimeTo
             };
             return deliveryDTO;
+        }
+
+        public async Task UpdateDeliveryStatusAsync(DeliveryStatusUpdateDTO statusUpdateDTO)
+        {
+            var delivery = await repository.GetByIdAsync(statusUpdateDTO.Id);
+            if (delivery == null)
+                throw new Exception("Delivery not found");
+            // Validar y asignar el nuevo estado
+            if (!Enum.TryParse<DeliveryStatus>(statusUpdateDTO.Status, out var newStatus))
+                throw new Exception("Invalid status value");
+            delivery.StatusEnum = newStatus;
+            repository.Update(delivery);
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<DeliveriesListDTO>> GetDeliveriesByUserIdAsync(int userId)
+        {
+            var deliveries = await deliveryRepository.GetDeliveriesByUserIdAsync(userId);
+            return deliveries.Select(d => new DeliveriesListDTO
+            {
+                Id = d.Id,
+                UserId = d.UserId,
+                OriginLat = d.OriginLat,
+                OriginLng = d.OriginLng,
+                DestinationLat = d.DestinationLat,
+                DestinationLng = d.DestinationLng,
+                RecipientName = d.RecipientName,
+                RecipientEmail = d.RecipientEmail,
+                RecipientPhone = d.RecipientPhone,
+                PackageDetails = d.PackageDetails,
+                Status = d.Status,
+                TrackingNumber = d.TrackingNumber,
+                OriginDescription = d.OriginDescription,
+                DestinationDescription = d.DestinationDescription,
+                CreatedAt = d.CreatedAt,
+                EstimatedDeliveryDate = d.EstimatedDeliveryDate,
+                EstimatedDeliveryTime = d.EstimatedDeliveryTime,
+                EstimatedTimeFrom = d.EstimatedTimeFrom,
+                EstimatedTimeTo = d.EstimatedTimeTo
+            });
         }
 
         private string GenerateTrackingNumber()
