@@ -199,6 +199,18 @@ namespace QBOTECH.DELIVERY.CORE.Services
             await repository.SaveChangesAsync();
         }
 
+        public async Task UpdateDeliveryStatusByTrackingAsync(DeliveryStatusUpdateByTrackingDTO statusUpdateDTO)
+        {
+            var delivery = await deliveryRepository.GetDeliveryByTrackingNumberAsync(statusUpdateDTO.TrackingNumber);
+            if (delivery == null)
+                throw new Exception("Delivery not found");
+            if (!Enum.TryParse<DeliveryStatus>(statusUpdateDTO.Status, out var newStatus))
+                throw new Exception("Invalid status value");
+            delivery.StatusEnum = newStatus;
+            repository.Update(delivery);
+            await repository.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<DeliveriesListDTO>> GetDeliveriesByUserIdAsync(int userId)
         {
             var deliveries = await deliveryRepository.GetDeliveriesByUserIdAsync(userId);

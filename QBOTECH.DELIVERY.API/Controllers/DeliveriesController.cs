@@ -120,6 +120,22 @@ namespace QBOTECH.DELIVERY.API.Controllers
             }
         }
 
+        [HttpPatch("tracking/{trackingNumber}/status")]
+        public async Task<IActionResult> UpdateDeliveryStatusByTracking(string trackingNumber, [FromBody] DeliveryStatusUpdateByTrackingDTO statusUpdateDTO)
+        {
+            if (!string.Equals(trackingNumber, statusUpdateDTO.TrackingNumber, StringComparison.OrdinalIgnoreCase))
+                return BadRequest();
+            try
+            {
+                await _deliveriesService.UpdateDeliveryStatusByTrackingAsync(statusUpdateDTO);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating delivery status by tracking number");
+            }
+        }
+
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetDeliveriesByUserId(int userId)
         {
@@ -173,6 +189,20 @@ namespace QBOTECH.DELIVERY.API.Controllers
         {
             var locations = await _locationService.GetLocationsByTrackingAsync(trackingNumber);
             return Ok(locations);
+        }
+
+        [HttpPost("tracking/{trackingNumber}/location-last")]
+        public async Task<IActionResult> UpsertLocationByTracking(string trackingNumber, [FromBody] DeliveryLocationDTO dto)
+        {
+            try
+            {
+                await _locationService.UpsertLocationByTrackingAsync(trackingNumber, dto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

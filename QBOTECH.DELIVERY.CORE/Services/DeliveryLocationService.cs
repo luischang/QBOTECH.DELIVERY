@@ -88,5 +88,33 @@ namespace QBOTECH.DELIVERY.CORE.Services
                 CreatedAt = entity.CreatedAt
             }).ToList();
         }
+
+        public async Task UpsertLocationByTrackingAsync(string trackingNumber, DeliveryLocationDTO dto)
+        {
+            var delivery = await _deliveryRepository.GetDeliveryByTrackingNumberAsync(trackingNumber);
+            if (delivery == null) throw new Exception("Delivery not found");
+            var lastLocation = await _locationRepository.GetLastLocationAsync(delivery.Id);
+            if (lastLocation == null)
+            {
+                // Crear nuevo registro
+                var entity = new DeliveryLocation
+                {
+                    DeliveryId = delivery.Id,
+                    Latitude = dto.Latitude,
+                    Longitude = dto.Longitude,
+                    CreatedAt = dto.CreatedAt
+                };
+                await _locationRepository.AddAsync(entity);
+            }
+            else
+            {
+                // Actualizar el último registro
+                lastLocation.Latitude = dto.Latitude;
+                lastLocation.Longitude = dto.Longitude;
+                lastLocation.CreatedAt = dto.CreatedAt;
+                _locationRepository.Update(lastLocation);
+                await _locationRepository.SaveChangesAsync();
+            }
+        }
     }
 }

@@ -31,5 +31,13 @@ namespace QBOTECH.DELIVERY.INFRASTRUCTURE.Repositories
                 .OrderBy(l => l.CreatedAt)
                 .ToListAsync();
         }
+        public void Update(DeliveryLocation location)
+        {
+            _context.DeliveryLocations.Update(location);
+        }
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

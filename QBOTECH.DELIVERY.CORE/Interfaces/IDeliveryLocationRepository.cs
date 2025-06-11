@@ -9,5 +9,7 @@ namespace QBOTECH.DELIVERY.CORE.Interfaces
         Task AddAsync(DeliveryLocation location);
         Task<DeliveryLocation?> GetLastLocationAsync(int deliveryId);
         Task<List<DeliveryLocation>> GetLocationsByDeliveryAsync(int deliveryId);
+        void Update(DeliveryLocation location);
+        Task SaveChangesAsync();
     }
 }

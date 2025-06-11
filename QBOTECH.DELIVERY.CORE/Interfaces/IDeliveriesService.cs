@@ -11,6 +11,7 @@ namespace QBOTECH.DELIVERY.CORE.Interfaces
         Task<DeliveriesListDTO> GetDeliveryByTrackingNumber(string trackingNumber);
         void UpdateDelivery(DeliveriesUpdateDTO deliveryDTO);
         Task UpdateDeliveryStatusAsync(DeliveryStatusUpdateDTO statusUpdateDTO);
+        Task UpdateDeliveryStatusByTrackingAsync(DeliveryStatusUpdateByTrackingDTO statusUpdateDTO);
         Task<IEnumerable<DeliveriesListDTO>> GetDeliveriesByUserIdAsync(int userId);
     }
 }
