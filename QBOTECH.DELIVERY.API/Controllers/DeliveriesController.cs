@@ -94,6 +94,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
 
         [HttpGet]
         [Route("tracking/{trackingNumber}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetDeliveryByTrackingNumber(string trackingNumber)
         {
             var delivery = await _deliveriesService.GetDeliveryByTrackingNumber(trackingNumber);
@@ -121,6 +122,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
         }
 
         [HttpPatch("tracking/{trackingNumber}/status")]
+        [AllowAnonymous]
         public async Task<IActionResult> UpdateDeliveryStatusByTracking(string trackingNumber, [FromBody] DeliveryStatusUpdateByTrackingDTO statusUpdateDTO)
         {
             if (!string.Equals(trackingNumber, statusUpdateDTO.TrackingNumber, StringComparison.OrdinalIgnoreCase))
@@ -168,6 +170,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
         }
 
         [HttpPost("tracking/{trackingNumber}/location")]
+        [AllowAnonymous]
         public async Task<IActionResult> PostLocationByTracking(string trackingNumber, [FromBody] DeliveryLocationByTrackingDTO dto)
         {
             if (!string.Equals(trackingNumber, dto.TrackingNumber, StringComparison.OrdinalIgnoreCase))
@@ -177,6 +180,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
         }
 
         [HttpGet("tracking/{trackingNumber}/location")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetLastLocationByTracking(string trackingNumber)
         {
             var location = await _locationService.GetLastLocationByTrackingAsync(trackingNumber);
@@ -192,6 +196,7 @@ namespace QBOTECH.DELIVERY.API.Controllers
         }
 
         [HttpPost("tracking/{trackingNumber}/location-last")]
+        [AllowAnonymous]
         public async Task<IActionResult> UpsertLocationByTracking(string trackingNumber, [FromBody] DeliveryLocationDTO dto)
         {
             try
